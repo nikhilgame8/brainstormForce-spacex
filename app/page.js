@@ -16,8 +16,10 @@ async function getData() {
   return res.json()
 }
 
-async function getCapsulesData() {
-  const res = await fetch(`${process.env.LIVE_API_URL}/api/capsules`, { cache: 'no-store' })
+async function getCapsulesData(context) {
+  const res = await fetch(`${process.env.LIVE_API_URL}/api/capsules?page=${
+    context.searchParams.page ? parseInt(context.searchParams.page) - 1 : 0
+  }`, { cache: 'no-store' })
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
 
@@ -29,9 +31,9 @@ async function getCapsulesData() {
   return res.json()
 }
 
-const page = async() => {
+const page = async (context) => {
   const data = await getData()
-  const capsuleData = await getCapsulesData()
+  const capsuleData = await getCapsulesData(context)
 
 
   return (
@@ -40,8 +42,7 @@ const page = async() => {
 
       {/* <TeamSection /> */}
       <SearchForm />
-      <ArticleSection data={capsuleData} />
-      <Pagination />
+      <ArticleSection data={capsuleData} capsuleDataCount={capsuleData.length} />      
       {/* <NewsLetter /> */}
     </div>
   )

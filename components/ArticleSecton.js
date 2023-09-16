@@ -1,11 +1,11 @@
 'use client'
-import Image from "next/image";
 import ContentDetailModel from "./ModelUI/ContentDetailModel";
-import SearchForm from "./SearchForm";
 import { useState } from "react";
+import Pagination from "./Pagination";
+import { useRouter, useSearchParams } from "next/navigation";
 
 
-const ArticleSection = ({ data }) => {
+const ArticleSection = ({ data, capsuleDataCount }) => {
     const [openModel, setOpenModel] = useState(false);
     const [modelData, setModelData] = useState("");
 
@@ -13,6 +13,19 @@ const ArticleSection = ({ data }) => {
         setModelData(data);
         setOpenModel(true);
     }
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const page = parseInt(searchParams.get("page"))
+      ? parseInt(searchParams.get("page"))
+      : 1;
+    const maxPage = Math.ceil(100 / 9);
+    const count = 100;
+    const startIndex = (page - 1) * 9;
+    const resultEnd = Math.min(startIndex + 9, data.length + 9);
+
+    const pageChange = (val) => {
+        router.push(`/?page=${val}`);
+    };
 
     return (
         <>
@@ -31,7 +44,7 @@ const ArticleSection = ({ data }) => {
                     <ul role="list" className="grid gap-x-8 gap-y-12 sm:grid-cols-3 sm:gap-y-16 xl:col-span-2 pt-24 ">
                         {data.map((post, index) => (
 
-                            <div className="card hover:scale-105" key={index} onClick={()=>openModelFunc(post)}>
+                            <div className="card hover:scale-105" key={index} onClick={() => openModelFunc(post)}>
                                 <div className="main-content">
                                     <div className="header">
                                         <span>Lauch date</span>
@@ -54,6 +67,13 @@ const ArticleSection = ({ data }) => {
                     </ul>
                 </div>
             </div>
+            <Pagination
+                maxPage={maxPage}
+                dataCount={count}
+                datalength={resultEnd}
+                pageChange={pageChange}
+                page={page}
+            />
         </>
     )
 }
