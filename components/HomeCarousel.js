@@ -1,5 +1,4 @@
 'use client'
-import React, { useRef, useState } from 'react';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -11,11 +10,11 @@ import 'swiper/css/navigation';
 
 // import required modules
 import { Pagination, Navigation, Autoplay } from 'swiper/modules';
-import Image from 'next/image';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
-const HomeCarousel = ({data}) => {
+const HomeCarousel = ({ data }) => {
     return (
-        <div className=''>
+        <div className='relative'>
             <Swiper
                 slidesPerView={1}
                 spaceBetween={30}
@@ -25,9 +24,10 @@ const HomeCarousel = ({data}) => {
                     disableOnInteraction: false,
                 }}
                 pagination={{
-                    dynamicBullets: true,
-                }}
-                navigation={true}
+                    clickable: true,
+                    dynamicBullets: true
+                  }}
+                navigation={{ nextEl: ".arrow-left", prevEl: ".arrow-right" }}
                 modules={[Pagination, Navigation, Autoplay]}
                 className="mySwiper"
             >
@@ -64,6 +64,13 @@ const HomeCarousel = ({data}) => {
                     ))
                 }
             </Swiper>
+            <div className="arrow-left absolute left-5 z-20 top-[45%] cursor-pointer">
+                {" "}
+                <ChevronLeftIcon className='w-8 h-8' />
+            </div>
+            <div className="arrow-right absolute right-5 z-20 top-[45%] cursor-pointer">
+                <ChevronRightIcon className='w-8 h-8' />
+            </div>
         </div>
     );
 }
